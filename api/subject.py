@@ -118,7 +118,7 @@ class SubjectIdApi(MethodView):
 class SubjectApi(MethodView):
     def get(self):
         try:
-            result = Subject.query.all()
+            result = Subject.query.filter_by(student_id=None).all()
             return jsonify(SubjectSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(SubjectSchema(many=True).dump([]).data), 404
