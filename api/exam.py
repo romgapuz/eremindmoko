@@ -36,15 +36,13 @@ class StudentIdExamApi(MethodView):
         try:
             subject = request.form['subject']
             exam_date = datetime.datetime.strptime(request.form['exam_date'], "%m/%d/%Y").date()
-            time_start = datetime.datetime.strptime(request.form['time_end'], '%I:%M %p').time()
-            time_end = datetime.datetime.strptime(request.form['time_end'], '%I:%M %p').time()
+            time_range = request.form['time_range']
             room = request.form['room']
 
             item_id = add_exam(
                 subject,
                 exam_date,
-                time_start,
-                time_end,
+                time_range,
                 room,
                 id
             )
@@ -68,10 +66,8 @@ class ExamIdApi(MethodView):
                 if 'subject' in request.form else None
             exam_date = request.form['exam_date'] \
                 if 'exam_date' in request.form else None
-            time_start = request.form['time_start'] \
-                if 'time_start' in request.form else None
-            time_end = request.form['time_end'] \
-                if 'time_end' in request.form else None
+            time_range = request.form['time_range'] \
+                if 'time_range' in request.form else None
             room = request.form['room'] \
                 if 'room' in request.form else None
         except Exception, ex:
@@ -83,8 +79,7 @@ class ExamIdApi(MethodView):
                 id,
                 subject,
                 exam_date,
-                time_start,
-                time_end,
+                time_range,
                 room
             )
         except Exception, ex:
