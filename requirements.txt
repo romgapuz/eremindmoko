@@ -1,0 +1,4 @@
+Flask-Admin==1.5.0
+flask-marshmallow==0.7.0
+Flask-SQLAlchemy==2.2
+marshmallow-sqlalchemy==0.12.1
