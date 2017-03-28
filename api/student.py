@@ -20,6 +20,10 @@ def register(app):
         '/student/<id>',
         view_func=StudentIdApi.as_view('student_id')
     )
+    app.add_url_rule(
+        '/login/',
+        view_func=LoginApi.as_view('login')
+    )
 
 
 class StudentApi(MethodView):
@@ -27,16 +31,20 @@ class StudentApi(MethodView):
         try:
             student_no = request.form['student_no']
             first_name = request.form['first_name']
+            middle_name = request.form['middle_name']
             last_name = request.form['last_name']
-            username = request.form['username']
             password = request.form['password']
+            course = request.form['course']
+            year_level = request.form['year_level']
 
             item_id = add_student(
                 student_no,
                 first_name,
+                middle_name,
                 last_name,
-                username,
-                password
+                password,
+                course,
+                year_level
             )
 
             return '{}'.format(item_id), 201
@@ -58,12 +66,16 @@ class StudentIdApi(MethodView):
                 if 'student_no' in request.form else None
             first_name = request.form['first_name'] \
                 if 'first_name' in request.form else None
+            middle_name = request.form['middle_name'] \
+                if 'middle_name' in request.form else None
             last_name = request.form['last_name'] \
                 if 'last_name' in request.form else None
-            username = request.form['username'] \
-                if 'username' in request.form else None
             password = request.form['password'] \
                 if 'password' in request.form else None
+            course = request.form['course'] \
+                if 'course' in request.form else None
+            year_level = request.form['year_level'] \
+                if 'year_level' in request.form else None
         except Exception, ex:
             return "Could not validate user information: {}". \
                 format(repr(ex)), 400
@@ -73,9 +85,11 @@ class StudentIdApi(MethodView):
                 id,
                 student_no,
                 first_name,
+                middle_name,
                 last_name,
-                username,
-                password
+                password,
+                course,
+                year_level
             )
         except Exception, ex:
             return "Error updating student: {}". \
@@ -89,3 +103,23 @@ class StudentIdApi(MethodView):
             return jsonify(StudentSchema(many=True).dump(None).data), 200
         else:
             return "No item deleted", 400
+
+
+class LoginApi(MethodView):
+    def post(self):
+        try:
+            student_no = request.form['student_no']
+            password = request.form['password']
+        except Exception, ex:
+            return "Could not validate student_no and password: {}". \
+                format(repr(ex)), 400
+
+        try:
+            item = Student.query.filter_by(student_no=student_no).one()
+
+            if item.password != password:
+                return "Incorrect password", 403
+        except Exception:
+            return "Student no not found", 403
+
+        return str(item.id)
