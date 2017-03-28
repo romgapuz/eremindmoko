@@ -3,6 +3,7 @@ from flask_admin.contrib import sqla
 from models.student import Student
 from models.subject import Subject
 from models.exam import Exam
+from models.announcement import Announcement
 
 
 def register(app, db):
@@ -13,3 +14,4 @@ def register(app, db):
     admin_view.add_view(sqla.ModelView(Student, db.session))
     admin_view.add_view(sqla.ModelView(Subject, db.session))
     admin_view.add_view(sqla.ModelView(Exam, db.session))
+    admin_view.add_view(sqla.ModelView(Announcement, db.session))

@@ -6,6 +6,7 @@ from models.base import db
 import api.student as api_student
 import api.subject as api_subject
 import api.exam as api_exam
+import api.announcement as api_announcement
 import admin
 
 # Create application
@@ -31,6 +32,7 @@ ma.init_app(app)
 api_student.register(app)
 api_subject.register(app)
 api_exam.register(app)
+api_announcement.register(app)
 admin.register(app, db)
 
 
