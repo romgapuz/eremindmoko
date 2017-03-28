@@ -35,7 +35,7 @@ def add_student(
     db.session.add(item)
     db.session.commit()
 
-    return user.id
+    return item.id
 
 
 def update_student(
