@@ -24,6 +24,10 @@ def register(app):
         '/login/',
         view_func=LoginApi.as_view('login')
     )
+    app.add_url_rule(
+        '/student/<id>/verify',
+        view_func=StudentIdVerifyApi.as_view('student_id_verify')
+    )
 
 
 class StudentApi(MethodView):
@@ -93,7 +97,7 @@ class StudentIdApi(MethodView):
             )
         except Exception, ex:
             return "Error updating student: {}". \
-                format(repr(ex)), 400
+                format(repr(ex)), 500
 
         return jsonify(StudentSchema(many=True).dump(None).data), 200
 
@@ -115,11 +119,42 @@ class LoginApi(MethodView):
                 format(repr(ex)), 400
 
         try:
-            item = Student.query.filter_by(student_no=student_no).one()
+            item = Student.query.filter_by(
+                student_no=student_no,
+                is_verified=True
+            ).one()
 
             if item.password != password:
                 return "Incorrect password", 403
         except Exception:
-            return "Student no not found", 403
+            return "Student no not found or verified", 403
 
         return str(item.id)
+
+class StudentIdVerifyApi(MethodView):
+    def get(self, id):
+        try:
+            item = Student.query.filter_by(
+                id=id,
+                is_verified=False
+            ).one()
+        except Exception:
+            return "Student no not found or already verified", 403
+
+        try:
+            update_student(
+                id,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                True
+            )
+        except Exception, ex:
+            return "Error verifying student: {}". \
+                format(repr(ex)), 500
+
+        return "Student verified successfully"

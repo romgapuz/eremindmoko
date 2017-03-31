@@ -10,6 +10,7 @@ class Student(db.Model):
     password = db.Column(db.String(80))
     course = db.Column(db.String(80))
     year_level = db.Column(db.String(10))
+    is_verified = db.Column(db.Boolean)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -46,7 +47,8 @@ def update_student(
         last_name,
         password,
         course,
-        year_level):
+        year_level,
+        is_verified):
     item = Student.query.filter_by(id=id).one()
 
     if student_no is not None:
@@ -63,6 +65,8 @@ def update_student(
         item.course = course
     if year_level is not None:
         item.year_level = year_level
+    if is_verified is not None:
+        item.is_verified = is_verified
 
     db.session.commit()
 
