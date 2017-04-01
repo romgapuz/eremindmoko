@@ -48,6 +48,7 @@ class StudentApi(MethodView):
                 first_name,
                 middle_name,
                 last_name,
+                email,
                 password,
                 course,
                 year_level
