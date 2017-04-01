@@ -90,3 +90,5 @@ ENV/
 
 *.pyc
 *.sqlite
+
+app.ini
