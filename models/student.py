@@ -7,6 +7,7 @@ class Student(db.Model):
     first_name = db.Column(db.String(100))
     middle_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
     password = db.Column(db.String(80))
     course = db.Column(db.String(80))
     year_level = db.Column(db.String(10))
@@ -21,6 +22,7 @@ def add_student(
         first_name,
         middle_name,
         last_name,
+        email,
         password,
         course,
         year_level):
@@ -29,6 +31,7 @@ def add_student(
     item.first_name = first_name
     item.middle_name = middle_name
     item.last_name = last_name
+    item.email = email
     item.password = password
     item.course = course
     item.year_level = year_level
@@ -45,6 +48,7 @@ def update_student(
         first_name,
         middle_name,
         last_name,
+        email,
         password,
         course,
         year_level,
@@ -59,6 +63,8 @@ def update_student(
         item.middle_name = middle_name
     if last_name is not None:
         item.last_name = last_name
+    if email is not None:
+        item.email = email
     if password is not None:
         item.password = password
     if course is not None:

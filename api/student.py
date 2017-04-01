@@ -9,6 +9,7 @@ from models.student import (
     delete_student
 )
 from schema.student import StudentSchema
+from utils.email_sender import EmailSender
 
 
 def register(app):
@@ -37,6 +38,7 @@ class StudentApi(MethodView):
             first_name = request.form['first_name']
             middle_name = request.form['middle_name']
             last_name = request.form['last_name']
+            email = request.form['email']
             password = request.form['password']
             course = request.form['course']
             year_level = request.form['year_level']
@@ -74,6 +76,8 @@ class StudentIdApi(MethodView):
                 if 'middle_name' in request.form else None
             last_name = request.form['last_name'] \
                 if 'last_name' in request.form else None
+            email = request.form['email'] \
+                if 'email' in request.form else None
             password = request.form['password'] \
                 if 'password' in request.form else None
             course = request.form['course'] \
@@ -91,6 +95,7 @@ class StudentIdApi(MethodView):
                 first_name,
                 middle_name,
                 last_name,
+                email,
                 password,
                 course,
                 year_level
@@ -132,6 +137,25 @@ class LoginApi(MethodView):
         return str(item.id)
 
 class StudentIdVerifyApi(MethodView):
+    def post(self, id):
+        try:
+            item = Student.query.filter_by(
+                id=id,
+                is_verified=False
+            ).one()
+        except Exception, ex:
+            return "Student no not found or already verified: {}". \
+                format(repr(ex)), 400
+    
+        try:
+            es = EmailSender()
+            es.send_verification(item.id, item.email, item.first_name)
+        except Exception, ex:
+            return "Sending email failed: {}". \
+                format(repr(ex)), 500
+
+        return "Verification email sent"
+
     def get(self, id):
         try:
             item = Student.query.filter_by(
@@ -144,6 +168,7 @@ class StudentIdVerifyApi(MethodView):
         try:
             update_student(
                 id,
+                None,
                 None,
                 None,
                 None,
