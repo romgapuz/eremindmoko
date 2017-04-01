@@ -21,7 +21,11 @@ class Student(db.Model):
     course = db.Column(db.String(80))
     year_level = db.Column(db.String(30))
     is_verified = db.Column(db.Boolean)
-    subjects = db.relationship(Subject, secondary=student_subject_table)
+    subjects = db.relationship(
+        Subject,
+        secondary=student_subject_table,
+        backref=db.backref('students')
+    )
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)

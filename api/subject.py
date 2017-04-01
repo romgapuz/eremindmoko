@@ -21,7 +21,7 @@ def register(app):
         view_func=SubjectIdApi.as_view('subject_id')
     )
     app.add_url_rule(
-        '/subject/',
+        '/subject',
         view_func=SubjectApi.as_view('subject')
     )
     app.add_url_rule(
@@ -57,8 +57,15 @@ class SubjectIdApi(MethodView):
 
 class SubjectApi(MethodView):
     def get(self):
+        student_id = request.args.get('student_id', None)
+
         try:
-            result = Subject.query.all()
+            if student_id:
+                result = Subject.query.filter(
+                    ~Subject.students.any(Student.id.in_(student_id))
+                ).all()
+            else:
+                result = Subject.query.all()
             return jsonify(SubjectSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(SubjectSchema(many=True).dump([]).data), 404

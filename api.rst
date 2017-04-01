@@ -30,7 +30,8 @@ Subject:
 
 GET /student/<id>/subject/ - get subjects by student id
 GET /subject/<id> - get a subject
-GET /subject/ - get list of subjects
+GET /subject - get list of subjects
+GET /subject?student_id=<id> - get list of subjects available for a student
 POST /subject/ - create a subject w/o student
    - code
    - description
