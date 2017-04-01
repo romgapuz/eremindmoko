@@ -7,7 +7,7 @@ class Student(db.Model):
     first_name = db.Column(db.String(100))
     middle_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(80))
     course = db.Column(db.String(80))
     year_level = db.Column(db.String(10))
