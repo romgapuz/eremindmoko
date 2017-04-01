@@ -14,13 +14,8 @@ class EmailSender(object):
         return config
 
     def send_verification(self, id, email, first_name):
-        try:
-            config = self.read_config()
-        except Exception, ex:
-            return "Error reading config file (app.ini): {}". \
-                format(repr(ex)), 500
-
         # get config entries
+        config = self.read_config()
         app_host = config.get('app', 'host')
         email_host = config.get('gmail', 'host')
         sender = config.get('gmail', 'sender')
