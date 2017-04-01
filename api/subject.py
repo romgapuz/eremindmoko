@@ -1,6 +1,7 @@
 from flask import jsonify
 from flask.views import MethodView
 from flask import request
+from sqlalchemy.orm import subqueryload
 from sqlalchemy.orm.exc import NoResultFound
 from models.subject import Subject
 from models.student import (
@@ -32,10 +33,8 @@ def register(app):
 class StudentIdSubjectApi(MethodView):
     def get(self, id):
         try:
-            result = Subject.query.filter_by(
-                student_id=id
-            ).all()
-            return jsonify(SubjectSchema(many=True).dump(result).data)
+            result = Student.query.filter_by(id=id).one()
+            return jsonify(SubjectSchema(many=True).dump(result.subjects).data)
         except NoResultFound:
             return jsonify(SubjectSchema(many=True).dump([]).data), 404
 
