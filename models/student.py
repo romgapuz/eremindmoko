@@ -45,6 +45,7 @@ def add_student(
     item.password = password
     item.course = course
     item.year_level = year_level
+    item.is_verified = False
 
     db.session.add(item)
     db.session.commit()
