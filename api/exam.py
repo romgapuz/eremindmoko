@@ -3,13 +3,15 @@ from flask.views import MethodView
 from flask import request
 from sqlalchemy.orm.exc import NoResultFound
 from models.exam import Exam
+from models.subject import Subject
+from models.student import Student
 from schema.exam import ExamSchema
 
 
 def register(app):
     app.add_url_rule(
-        '/subject/<id>/exam/',
-        view_func=SubjectIdExamApi.as_view('subject_id_exam')
+        '/student/<id>/exam/',
+        view_func=StudentIdExamApi.as_view('student_id_exam')
     )
     app.add_url_rule(
         '/exam/<id>',
@@ -17,12 +19,14 @@ def register(app):
     )
 
 
-class SubjectIdExamApi(MethodView):
+class StudentIdExamApi(MethodView):
     def get(self, id):
         try:
-            result = Exam.query.filter_by(
-                subject_id=id
-            ).all()
+            result = Exam.query.join(
+                Subject, Exam.subject
+            ).join(
+                Student, Subject.students
+            ).filter_by(id=id).all()
             return jsonify(ExamSchema(many=True).dump(result).data)
         except NoResultFound:
             return jsonify(ExamSchema(many=True).dump([]).data), 404
