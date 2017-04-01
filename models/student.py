@@ -1,4 +1,13 @@
 from models.base import db
+from models.subject import Subject
+
+
+student_subject_table = db.Table(
+    'student_subject',
+    db.Model.metadata,
+    db.Column('student_id', db.Integer, db.ForeignKey('student.id')),
+    db.Column('subject_id', db.Integer, db.ForeignKey('subject.id'))
+)
 
 
 class Student(db.Model):
@@ -10,8 +19,9 @@ class Student(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(80))
     course = db.Column(db.String(80))
-    year_level = db.Column(db.String(10))
+    year_level = db.Column(db.String(30))
     is_verified = db.Column(db.Boolean)
+    subjects = db.relationship(Subject, secondary=student_subject_table)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -81,3 +91,13 @@ def delete_student(id):
     deleted = Student.query.filter_by(id=id).delete()
     db.session.commit()
     return deleted
+
+
+def register_subject(student_id, subject_id):
+    student = Student.query.filter_by(id=student_id).one()
+    subject = Subject.query.filter_by(id=subject_id).one()
+
+    item = student.subjects.append(subject)
+    db.session.commit()
+
+    return item
