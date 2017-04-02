@@ -20,6 +20,7 @@ class Student(db.Model):
     password = db.Column(db.String(80))
     course = db.Column(db.String(80))
     year_level = db.Column(db.String(30))
+    registration_id = db.Column(db.String(300))
     is_verified = db.Column(db.Boolean)
     subjects = db.relationship(
         Subject,
@@ -67,6 +68,7 @@ def update_student(
         password,
         course,
         year_level,
+        registration_id,
         is_verified):
     item = Student.query.filter_by(id=id).one()
 
@@ -86,6 +88,8 @@ def update_student(
         item.course = course
     if year_level is not None:
         item.year_level = year_level
+    if registration_id is not None:
+        item.registration_id = registration_id
     if is_verified is not None:
         item.is_verified = is_verified
 

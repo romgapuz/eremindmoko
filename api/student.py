@@ -66,7 +66,7 @@ class StudentIdApi(MethodView):
             return jsonify(StudentSchema(many=False).dump(result).data)
         except NoResultFound:
             return jsonify(StudentSchema(many=False).dump(None).data), 404
-            
+
     def put(self, id):
         try:
             student_no = request.form['student_no'] \
@@ -85,6 +85,8 @@ class StudentIdApi(MethodView):
                 if 'course' in request.form else None
             year_level = request.form['year_level'] \
                 if 'year_level' in request.form else None
+            registration_id = request.form['registration_id'] \
+                if 'registration_id' in request.form else None
         except Exception, ex:
             return "Could not validate user information: {}". \
                 format(repr(ex)), 400
@@ -99,7 +101,9 @@ class StudentIdApi(MethodView):
                 email,
                 password,
                 course,
-                year_level
+                year_level,
+                registration_id,
+                None
             )
         except Exception, ex:
             return "Error updating student: {}". \
@@ -137,6 +141,7 @@ class LoginApi(MethodView):
 
         return str(item.id)
 
+
 class StudentIdVerifyApi(MethodView):
     def post(self, id):
         try:
@@ -147,7 +152,7 @@ class StudentIdVerifyApi(MethodView):
         except Exception, ex:
             return "Student no not found or already verified: {}". \
                 format(repr(ex)), 400
-    
+
         try:
             es = EmailSender()
             es.send_verification(item.id, item.email, item.first_name)
@@ -159,7 +164,7 @@ class StudentIdVerifyApi(MethodView):
 
     def get(self, id):
         try:
-            item = Student.query.filter_by(
+            Student.query.filter_by(
                 id=id,
                 is_verified=False
             ).one()
@@ -169,6 +174,7 @@ class StudentIdVerifyApi(MethodView):
         try:
             update_student(
                 id,
+                None,
                 None,
                 None,
                 None,
