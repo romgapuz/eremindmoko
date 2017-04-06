@@ -20,17 +20,17 @@ class EmailSender(object):
         message_body = "\r\n".join([
             "From: " + sender,
             "To: " + email,
-            "Subject: eKonek Account Verification",
+            "Subject: eRemindMoKo Account Verification",
             "",
             "Hi " + first_name,
             "",
             "Thank you for registering at eKonek. " +
             "Please verify your account by clicking this link: " +
-            "http://" + app_host + "/customer/" + str(id) + "/verify",
+            "http://" + app_host + "/student/" + str(id) + "/verify",
             "",
             "Regards,",
             "",
-            "eKonek Team"
+            "eRemindMoKo Team"
         ])
         server.sendmail(sender, email, message_body)
         server.quit()
