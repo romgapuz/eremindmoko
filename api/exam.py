@@ -1,6 +1,5 @@
 from flask import jsonify
 from flask.views import MethodView
-from flask import request
 from sqlalchemy.orm.exc import NoResultFound
 from models.exam import Exam
 from models.subject import Subject
