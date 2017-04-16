@@ -19,6 +19,7 @@ PUT /student/<id> - update a student
    - password
    - course
    - year_level
+   - registration_id
 DELETE /student/<id> - delete a student
 POST /login
    - student_no
