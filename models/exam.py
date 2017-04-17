@@ -23,22 +23,23 @@ def delete_exam(id):
 @db.event.listens_for(Exam, "after_insert")
 def check_exam_date(mapper, connection, target):
     for student in target.subject.students:
-        connection.execute(
-            "insert into notification (" +
-            "notification_date," +
-            "title," +
-            "message," +
-            "registration_id," +
-            "reference_id," +
-            "is_sent" +
-            ") values (" +
-            "'" + str(target.exam_date) + "', " +
-            "'Exam', " +
-            "'You have an exam today at room {} on {}', ".format(
-                target.room,
-                target.time_range
-            ) +
-            "'" + student.registration_id + "', " +
-            str(target.id) + ", " +
-            "0)"
-        )
+        if student.registration_id:
+            connection.execute(
+                "insert into notification (" +
+                "notification_date," +
+                "title," +
+                "message," +
+                "registration_id," +
+                "reference_id," +
+                "is_sent" +
+                ") values (" +
+                "'" + str(target.exam_date) + "', " +
+                "'Exam', " +
+                "'You have an exam today at room {} on {}', ".format(
+                    target.room,
+                    target.time_range
+                ) +
+                "'" + student.registration_id + "', " +
+                str(target.id) + ", " +
+                "0)"
+            )
